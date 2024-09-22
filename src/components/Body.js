@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import RestaurantCard from "./RestaurantCard";
 
 function filterData(restaurants, searchText) {
   const filteredData = restaurants.filter((restaurant) => {
@@ -21,15 +22,13 @@ const Body = () => {
 
   async function getRestaurants() {
     const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=26.87560&lng=80.91150&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.9715987&lng=77.5945627&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
     );
     const json = await data.json();
-    console.log(
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
     const restaurantsList =
       json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants;
+    console.log(restaurantsList);
     setFilteredRestaurants(restaurantsList);
     setAllRestaurants(restaurantsList);
   }
@@ -66,30 +65,11 @@ const Body = () => {
           <h3>NOT FOUND</h3>
         ) : (
           filteredRestaurants.map((item) => {
-            return <RestaurantCard {...item.info} />;
+            return <RestaurantCard {...item.info} key={item.info.id} />;
           })
         )}
       </div>
     </>
-  );
-};
-
-const RestaurantCard = ({
-  cloudinaryImageId,
-  name,
-  costForTwo,
-  avgRatingString,
-}) => {
-  return (
-    <div className="card">
-      <img
-        src={`https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/${cloudinaryImageId}`}
-        alt="card-img"
-      />
-      <h2>{name}</h2>
-      <h3>{costForTwo}</h3>
-      <h4>{avgRatingString} stars</h4>
-    </div>
   );
 };
 
